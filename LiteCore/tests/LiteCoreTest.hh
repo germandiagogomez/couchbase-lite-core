@@ -30,7 +30,7 @@ namespace fleece {
 }
 
 
-#include "CatchHelper.hh"
+
 
 #include "DataFile.hh"
 

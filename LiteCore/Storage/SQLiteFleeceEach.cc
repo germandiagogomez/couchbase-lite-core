@@ -294,8 +294,9 @@ private:
     static int cursorColumn(sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i) noexcept {
         return ((FleeceCursor*)cur)->column(ctx, i);
     }
-    static int cursorRowid(sqlite3_vtab_cursor *cur, int64_t *pRowid) noexcept {
-        return ((FleeceCursor*)cur)->rowid(pRowid);
+    static int cursorRowid(sqlite3_vtab_cursor *cur, sqlite3_int64 *pRowid) noexcept {
+        auto convertedRowid = static_cast<long int>(*pRowid);
+        return ((FleeceCursor*)cur)->rowid(&convertedRowid);
     }
     static int cursorEof(sqlite3_vtab_cursor *cur) noexcept {
         return ((FleeceCursor*)cur)->atEOF();

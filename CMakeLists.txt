@@ -84,6 +84,10 @@ else()
 endif()
 
 ### TESTS:
+option(ENABLE_RUN_TESTS "Compile tests" OFF)
 
-add_subdirectory(LiteCore/tests)
-add_subdirectory(C/tests)
+if (ENABLE_RUN_TESTS)
+  add_subdirectory(LiteCore/tests)
+  add_subdirectory(C/tests)
+endif()
+
