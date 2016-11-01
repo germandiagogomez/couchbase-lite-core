@@ -73,6 +73,8 @@ target_link_libraries(LiteCore  LiteCoreStatic
                                 sqlite3
                                 SQLite3_UnicodeSN)
 
+target_include_directories(LiteCoreStatic PRIVATE vendor/SQLiteCpp)
+
 # Mac/iOS stuff
 if (APPLE)
     set_target_properties(LiteCore PROPERTIES LINK_FLAGS
