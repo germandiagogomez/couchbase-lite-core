@@ -295,7 +295,11 @@ private:
         return ((FleeceCursor*)cur)->column(ctx, i);
     }
     static int cursorRowid(sqlite3_vtab_cursor *cur, sqlite3_int64 *pRowid) noexcept {
+      #ifndef __APPLE__
         auto convertedRowid = static_cast<long int>(*pRowid);
+      #else
+	auto convertedRowid = static_cast<long long>(*pRowid);
+      #endif
         return ((FleeceCursor*)cur)->rowid(&convertedRowid);
     }
     static int cursorEof(sqlite3_vtab_cursor *cur) noexcept {
