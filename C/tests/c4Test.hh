@@ -13,12 +13,20 @@
 #include "c4.h"
 
 #include "CatchHelper.hh"
-#include "MSVC_Compat.hh"
+#include "PlatformCompat.hh"
 #include "Logging.hh"
 
 using litecore::LogLevel;
 using litecore::LogDomain;
 using litecore::DefaultLog;
+
+
+#ifdef NDEBUG
+#undef REQUIRE  // it slows down the tests significantly
+#define REQUIRE(X) ({if (!(X)) abort();})
+#undef INFO
+#define INFO(X)
+#endif
 
 
 #ifdef _MSC_VER

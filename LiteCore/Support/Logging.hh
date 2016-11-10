@@ -7,7 +7,9 @@
 //
 
 #pragma once
-#include "MSVC_Compat.hh"
+#include "slice.hh"
+#include "PlatformCompat.hh"
+#include <string>
 #include <stdarg.h>
 #include <stdint.h>
 
@@ -84,6 +86,22 @@ private:
 extern LogDomain DefaultLog;
 
 
+std::string _logSlice(fleece::slice);
+#define logSlice(S) (_logSlice((S)).c_str())
+
+#ifdef _MSC_VER
+#define LogToAt(DOMAIN, LEVEL, FMT, ...) \
+    {if (_usuallyFalse((DOMAIN).willLog(LogLevel::LEVEL))) \
+        (DOMAIN).log(LogLevel::LEVEL, FMT, ##__VA_ARGS__);}
+
+#define LogTo(DOMAIN, FMT, ...)         LogToAt(DOMAIN, Info, FMT, ##__VA_ARGS__)
+#define LogVerbose(DOMAIN, FMT, ...)    LogToAt(DOMAIN, Verbose, FMT, ##__VA_ARGS__)
+
+#define Debug(FMT, ...)                 LogToAt(DefaultLog, Debug,   FMT, ##__VA_ARGS__)
+#define Log(FMT, ...)                   LogToAt(DefaultLog, Info,    FMT, ##__VA_ARGS__)
+#define Warn(FMT, ...)                  LogToAt(DefaultLog, Warning, FMT, ##__VA_ARGS__)
+#define WarnError(FMT, ...)             LogToAt(DefaultLog, Error,   FMT, ##__VA_ARGS__)
+#else
 #define LogToAt(DOMAIN, LEVEL, FMT, ARGS...) \
     ({if (_usuallyFalse((DOMAIN).willLog(LogLevel::LEVEL))) \
         (DOMAIN).log(LogLevel::LEVEL, FMT, ##ARGS);})
@@ -95,6 +113,7 @@ extern LogDomain DefaultLog;
 #define Log(FMT, ARGS...)                   LogToAt(DefaultLog, Info,    FMT, ##ARGS)
 #define Warn(FMT, ARGS...)                  LogToAt(DefaultLog, Warning, FMT, ##ARGS)
 #define WarnError(FMT, ARGS...)             LogToAt(DefaultLog, Error,   FMT, ##ARGS)
+#endif
 
 static inline bool WillLog(LogLevel lv)     {return DefaultLog.willLog(lv);}
 
