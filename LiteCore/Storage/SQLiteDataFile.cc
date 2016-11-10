@@ -19,6 +19,7 @@
 #include "Record.hh"
 #include "Error.hh"
 #include "FilePath.hh"
+#include "SharedKeys.hh"
 #include "SQLiteCpp/SQLiteCpp.h"
 #include <mutex>
 #include "sqlite3/sqlite3.h"
@@ -98,13 +99,11 @@ namespace litecore {
         if (!decrypt())
             error::_throw(error::UnsupportedEncryption);
 
-        RegisterFleeceFunctions(_sqlDb->getHandle());
-        RegisterFleeceEachFunctions(_sqlDb->getHandle());
-
         withFileLock([this]{
             // http://www.sqlite.org/pragma.html
             _sqlDb->exec("PRAGMA mmap_size=50000000");      // mmap improves performance
             _sqlDb->exec("PRAGMA journal_mode=WAL");        // faster writes, better concurrency
+            _sqlDb->exec("PRAGMA journal_size_limit=5000000"); // trim WAL file to 5MB
             _sqlDb->exec("PRAGMA synchronous=normal");      // faster commits
 
             // Configure number of extra threads to be used by SQLite:
@@ -122,6 +121,15 @@ namespace litecore {
             // Create the default KeyStore's table:
             (void)defaultKeyStore();
         });
+    }
+
+
+    void SQLiteDataFile::registerFleeceFunctions() {
+        if (!_registeredFleeceFunctions) {
+            RegisterFleeceFunctions(_sqlDb->getHandle(), documentKeys());
+            RegisterFleeceEachFunctions(_sqlDb->getHandle(), documentKeys());
+            _registeredFleeceFunctions = true;
+        }
     }
 
 

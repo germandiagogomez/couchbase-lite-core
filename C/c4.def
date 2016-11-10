@@ -22,6 +22,10 @@ c4db_getLastSequence
 c4db_beginTransaction
 c4db_endTransaction
 c4db_isInTransaction
+c4db_createFleeceEncoder
+c4db_encodeJSON
+c4db_initFLDictKey
+c4db_getFLSharedKeys
 c4raw_free
 c4raw_get
 c4raw_put
@@ -46,6 +50,7 @@ c4doc_save
 c4doc_setExpiration
 c4doc_getExpiration
 c4db_nextDocExpiration
+c4doc_bodyAsJSON
 c4rev_getGeneration
 c4db_enumerateChanges
 c4db_enumerateAllDocs
@@ -134,6 +139,11 @@ c4stream_write
 c4stream_computeBlobKey
 c4stream_install
 c4stream_closeWriter
+c4dbobs_create
+c4dbobs_getChanges
+c4dbobs_free
+c4docobs_create
+c4docobs_free
 c4doc_getForPut
 c4_getObjectCount
 c4_shutdown
@@ -165,6 +175,7 @@ FLArrayIterator_Next
 FLDict_Count
 FLDict_Get
 FLDict_GetUnsorted
+FLDict_GetSharedKey
 FLDictIterator_Begin
 FLDictIterator_GetKey
 FLDictIterator_GetValue
@@ -177,6 +188,7 @@ FLEncoder_New
 FLEncoder_NewWithOptions
 FLEncoder_Free
 FLEncoder_Reset
+FLEncoder_SetSharedKeys
 FLEncoder_WriteNull
 FLEncoder_WriteBool
 FLEncoder_WriteInt

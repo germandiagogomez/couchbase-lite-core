@@ -7,6 +7,7 @@
 //
 
 #include "c4Test.hh"
+#include "c4Document+Fleece.h"
 #include "slice.hh"
 #include "Benchmark.hh"
 #include <iostream>
@@ -79,7 +80,7 @@ string toJSON(C4KeyReader r) {
 
 
 static void log(C4LogLevel level, C4Slice message) {
-    static const char* kLevelNames[4] = {"debug", "info", "WARNING", "ERROR"};
+    static const char* kLevelNames[5] = {"debug", "verbose", "info", "WARNING", "ERROR"};
     fprintf(stderr, "LiteCore-C %s: %.*s\n", kLevelNames[level], (int)message.size, (char*)message.buf);
 }
 
@@ -108,7 +109,7 @@ C4Test::C4Test(int testOption)
     c4log_register(kC4LogWarning, log);
 
     C4DatabaseConfig config = { };
-    config.flags = kC4DB_Create;
+    config.flags = kC4DB_Create | kC4DB_SharedKeys;
     config.storageEngine = _storage;
     config.versioning = _versioning;
 
@@ -193,6 +194,7 @@ void C4Test::createRev(C4Slice docID, C4Slice revID, C4Slice body, bool isNew) {
 
 // Reads a file into memory.
 FLSliceResult C4Test::readFile(const char *path) {
+    INFO("Opening file " << path);
     FILE *fd = fopen(path, "r");
     REQUIRE(fd != nullptr);
     fseeko(fd, 0, SEEK_END);
@@ -234,20 +236,17 @@ unsigned C4Test::importJSONLines(const char *path, double timeout, bool verbose)
     unsigned numDocs = 0;
     {
         TransactionHelper t(db);
-        FLEncoder encoder = FLEncoder_New();
         readFileByLines(path, [&](FLSlice line)
         {
+            C4Error c4err;
             FLError error;
-            FLEncoder_ConvertJSON(encoder, {line.buf, line.size});
-            FLSliceResult body = FLEncoder_Finish(encoder, &error);
+            FLSliceResult body = c4db_encodeJSON(db, {line.buf, line.size}, &c4err);
             REQUIRE(body.buf);
-            FLEncoder_Reset(encoder);
 
             char docID[20];
             sprintf(docID, "%07u", numDocs+1);
 
             // Save document:
-            C4Error c4err;
             C4DocPutRequest rq = {};
             rq.docID = c4str(docID);
             rq.body = (C4Slice)body;

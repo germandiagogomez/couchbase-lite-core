@@ -29,6 +29,10 @@ _c4db_getLastSequence
 _c4db_beginTransaction
 _c4db_endTransaction
 _c4db_isInTransaction
+_c4db_createFleeceEncoder
+_c4db_encodeJSON
+_c4db_initFLDictKey
+_c4db_getFLSharedKeys
 
 _c4raw_free
 _c4raw_get
@@ -56,6 +60,7 @@ _c4doc_save
 _c4doc_setExpiration
 _c4doc_getExpiration
 _c4db_nextDocExpiration
+_c4doc_bodyAsJSON
 
 _c4rev_getGeneration
 
@@ -159,6 +164,12 @@ _c4stream_computeBlobKey
 _c4stream_install
 _c4stream_closeWriter
 
+_c4dbobs_create
+_c4dbobs_getChanges
+_c4dbobs_free
+_c4docobs_create
+_c4docobs_free
+
 # Private API, only exposed for testing:
 _c4doc_getForPut
 _c4_getObjectCount
@@ -193,6 +204,7 @@ _FLArrayIterator_Next
 _FLDict_Count
 _FLDict_Get
 _FLDict_GetUnsorted
+_FLDict_GetSharedKey
 _FLDictIterator_Begin
 _FLDictIterator_GetKey
 _FLDictIterator_GetValue
@@ -205,6 +217,7 @@ _FLEncoder_New
 _FLEncoder_NewWithOptions
 _FLEncoder_Free
 _FLEncoder_Reset
+_FLEncoder_SetSharedKeys
 _FLEncoder_WriteNull
 _FLEncoder_WriteBool
 _FLEncoder_WriteInt
@@ -231,3 +244,4 @@ _FLDict_GetWithCFString
 _FLEncoder_WriteNSObject
 _FLValue_GetNSObject
 _FLDict_GetWithNSString
+_FLErrorDomain
