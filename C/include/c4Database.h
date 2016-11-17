@@ -76,7 +76,12 @@ extern "C" {
         @{ */
 
     /** Opaque handle to an opened database. */
-    typedef struct c4Database C4Database;
+    typedef struct c4Database{
+        c4Database() = default;
+        c4Database(c4Database const &) = delete;
+        c4Database & operator=(c4Database const &) = delete;
+        ~c4Database()=default;
+    } C4Database;
 
 
     /** Opens a database. */
