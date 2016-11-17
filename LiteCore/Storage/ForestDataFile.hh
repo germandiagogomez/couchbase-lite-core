@@ -45,7 +45,7 @@ namespace litecore {
         class Factory : public DataFile::Factory {
         public:
             virtual const char* cname() override                {return "ForestDB";}
-            virtual std::string filenameExtension() override    {return ".forestdb";}
+            virtual std::string filenameExtension() override    {return ".forest";}
             virtual bool encryptionEnabled(EncryptionAlgorithm) override;
             virtual ForestDataFile* openFile(const FilePath &, const Options* =nullptr) override;
             virtual bool deleteFile(const FilePath &path, const Options* =nullptr) override;
